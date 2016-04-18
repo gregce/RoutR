@@ -1,0 +1,1 @@
+You may download the alltrips.rda file used in this viz [here](https://www.dropbox.com/s/f32skfj8qh259af/alltrips.rda?dl=0)
