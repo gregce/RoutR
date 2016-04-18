@@ -236,8 +236,23 @@ server <- function(input, output) {
   destination<- reactive({geocode(input$destination, output = "all")})
   
   # Create formatted addresses for popup
-  origin.fa <- reactive({paste0(sep = "",  "<b>Origin</b><br>", origin()$results[[1]]$formatted_address, "<br><br><b>Trip Stats:<b>")})
-  destination.fa <- reactive({paste0(sep = "",  "<b>Destination</b><br>", destination()$results[[1]]$formatted_address, "<br><br><b>Trip Stats:<b>")})
+  origin.fa <- reactive({paste0(sep = "",  "<b>Origin</b><br>"
+                                , origin()$results[[1]]$formatted_address
+                                , "<br><br><b>Trip Stats:</b><br>"
+                                , "<b>Average Duration (Mins): </b>", round(mean(t()$trip_duration_seconds)/60,2), "<br>"
+                                , "<b>Average Fare Cost ($): </b>", round(mean(t()$total_amount),2),"<br>"                 
+                                , "<b>Average Number of Passengers: </b>", round(mean(t()$passenger_count),2),"<br>" 
+                                , "<b>Distance from Origin to Destination (km): </b>", ggmap::mapdist(input$origin, input$destination)$km, "<br>"  
+                                                                 
+                                                                 )})
+  destination.fa <- reactive({paste0(sep = ""
+                                     ,  "<b>Destination</b><br>", destination()$results[[1]]$formatted_address
+                                     , "<br><br><b>Trip Stats:</b><br>"
+                                     , "<b>Average Duration (Mins): </b>", round(mean(t()$trip_duration_seconds)/60,2), "<br>"
+                                     , "<b>Average Fare Cost ($): </b>", round(mean(t()$total_amount),2),"<br>"                 
+                                     , "<b>Average Number of Passengers: </b>", round(mean(t()$passenger_count),2),"<br>" 
+                                     , "<b>Distance from Destination to Origin (km): </b>", ggmap::mapdist(input$origin, input$destination)$km, "<br>" 
+                                     )})
   
   # Create and round lat long formatting based on selected input precsision
   precision <- reactive({as.numeric(as.character(cases(
@@ -281,12 +296,12 @@ server <- function(input, output) {
   # Render may 
   output$mymap <- renderLeaflet({
     leaflet() %>%
-      setView(lng = -73.985428, lat = 40.748817, zoom = 11) %>%
+      setView(lng = -73.985428, lat = 40.748817, zoom = 12) %>%
       addProviderTiles(input$layer, options = providerTileOptions(noWrap = TRUE)) %>%
       addPolylines(route_df()$lon, route_df()$lat, fill = FALSE) %>%
-      addMarkers(route_df()$lon[1], route_df()$lat[1], popup = htmlEscape(origin.fa())) %>%
+      addMarkers(route_df()$lon[1], route_df()$lat[1], popup = origin.fa()) %>%
       addMarkers(route_df()$lon[length(route_df()$lon)], route_df()$lat[length(route_df()$lon)]
-                 ,popup = htmlEscape(destination.fa())) %>%
+                 ,popup = destination.fa()) %>%
       addCircles(route_df()$lon[1], route_df()$lat[1], radius = precision()) %>%
       addCircles(route_df()$lon[length(route_df()$lon)], route_df()$lat[length(route_df()$lon)], radius = precision()) %>%
       fitBounds(lng1 = max(route_df()$lon),lat1 = max(route_df()$lat),
