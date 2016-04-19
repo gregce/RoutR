@@ -18,6 +18,7 @@ library(geosphere)
 library(plyr)
 library(ggplot2)
 library(htmltools)
+library(DT)
 
 #############################
 ## Functions 
@@ -154,11 +155,7 @@ ui <- fluidPage(
   ),
   
   tabPanel("Data Explorer",
-           fluidRow(
-             column(3,
-                    selectInput("states", "States", c("All states"="", structure(state.abb, names=state.name), "Washington, DC"="DC"), multiple=TRUE)
-             )
-           )
+           DT::dataTableOutput("triptable")
           ),
   tabPanel("About",
            titlePanel("About RoutR"),
@@ -330,6 +327,11 @@ server <- function(input, output) {
     geom_density() +
     geom_vline(data=t(), aes(xintercept=mean(total_amount),  colour=vehicle_type),
                linetype="dashed", size=1) + theme(legend.position="none") + xlab("Cost ($)")
+  })
+  
+  output$triptable <- DT::renderDataTable({
+   
+    DT::datatable(t(), escape = FALSE)
   })
 }
 
