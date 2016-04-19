@@ -386,7 +386,7 @@ server <- function(input, output) {
   ggplot(t(), aes(x=total_amount, colour=vehicle_type)) +
     geom_density() +
     geom_vline(data=t(), aes(xintercept=mean(total_amount),  colour=vehicle_type),
-               linetype="dashed", size=1) + theme(legend.position="none") + xlab("Cost ($)")
+               linetype="dashed", size=1) + theme(legend.position="none") + xlab("Cost ($)") + ylab("Fraction of Trips")
   })
   
   output$triptable <- DT::renderDataTable({
