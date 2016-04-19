@@ -1,7 +1,7 @@
 ## Public version of the source code
 This repo is a public version of the source code for the [RoutR.nyc app](http://routr.nyc). The app is built with R, JavaScript and Shiny. If you got this far, we have to assume you can look after yourself with R and navigating this GitHub repo; we can’t give detailed guidance or help. 
 
-The app itself is contained in the `./shiny folder and can be run from the root directory with:
+The app itself is contained in the `./shiny` folder and can be run from the root directory with:
 
 ```R
 shiny::runApp("app.R")
