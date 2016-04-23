@@ -238,8 +238,8 @@ load("data/alltrips.rda")
 server <- function(input, output) {
   
   ## Grab list of geocoded information once in a reactive expression
-  origin <- eventReactive(input$route, {geocode(input$origin, output = "all")})
-  destination<- eventReactive(input$route, {geocode(input$destination, output = "all")})
+origin <- eventReactive(input$route, {geocode(paste0(input$origin, " NYC"), output = "all")})
+  destination<- eventReactive(input$route, {geocode(paste0(input$destination, " NYC"), output = "all")})
   
   mapdist <- eventReactive(input$route, {round(ggmap::mapdist(input$origin, input$destination)$miles,2)})
   
